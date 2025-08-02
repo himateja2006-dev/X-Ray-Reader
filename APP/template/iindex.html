@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Himateja">
+    <meta name="keywords" content="X-ray, Disease Prediction, Medical AI, Chest Diagnosis, Lung Health">
+    <title>X-Ray Reader - Disease Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩻</text></svg>">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    X-Ray Reader
+                </a>
+                <div class="nav-links" id="navLinks">
+                    <a href="#" class="nav-link home-link">Home</a>
+                </div>
+                <div id="authButtons">
+                    <button class="btn btn-outline login-btn">Log in</button>
+                    <button class="btn signup-btn">Sign up</button>
+                </div>
+                <div id="userMenu" class="hidden">
+                    <span id="welcomeUser"></span>
+                    <button class="btn btn-outline logout-btn">Log out</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container" id="mainContent">
+            <!-- Login Form -->
+            <div class="auth-container" id="loginForm">
+                <div class="auth-header">
+                    <h2 class="auth-title">Log in to your account</h2>
+                    <p class="auth-subtitle">Welcome back! Please enter your details.</p>
+                </div>
+                <div class="alert alert-danger hidden" id="loginError"></div>
+                <form id="loginFormEl">
+                    <div class="form-group">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn-block">Log in</button>
+                </form>
+                <div class="form-footer">
+                    Don't have an account? <a href="#" class="signup-link">Sign up</a>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div class="auth-container hidden" id="signupForm">
+                <div class="auth-header">
+                    <h2 class="auth-title">Create an account</h2>
+                    <p class="auth-subtitle">Join X-Ray Reader to detect diseases early.</p>
+                </div>
+                <div class="alert alert-danger hidden" id="signupError"></div>
+                <form id="signupFormEl">
+                    <div class="form-group">
+                        <label for="signupName" class="form-label">Name</label>
+                        <input type="text" id="signupName" class="form-input" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail" class="form-label">Email</label>
+                        <input type="email" id="signupEmail" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword" class="form-label">Password</label>
+                        <input type="password" id="signupPassword" class="form-input" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-block">Sign up</button>
+                </form>
+                <div class="form-footer">
+                    Already have an account? <a href="#" class="login-link">Log in</a>
+                </div>
+            </div>
+
+            <!-- Image Upload Form -->
+            <div class="upload-container hidden" id="uploadContainer">
+                <h2 class="upload-title">Upload Chest X-Ray for Analysis</h2>
+                <div class="alert alert-success hidden" id="uploadSuccess">Image uploaded successfully!</div>
+                <div class="alert alert-danger hidden" id="uploadError"></div>
+                
+                <div class="upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <p class="upload-text">Drop your chest X-ray image here or click to upload</p>
+                        <p class="upload-hint">Max file size: 5MB</p>
+                        <input type="file" id="fileInput" class="upload-input" accept="image/*">
+                    </div>
+                    
+                    <div class="result-section hidden" id="resultSection">
+                        <div class="result-content">
+                            <div class="image-container">
+                                <img id="imagePreview" class="image-preview" alt="Preview">
+                            </div>
+                            <div class="prediction-container">
+                                <h3 class="prediction-title">Analysis Results</h3>
+                                <div class="prediction-details" id="predictionDetails">
+                                    <!-- Prediction details will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button id="uploadButton" class="btn">Analyze Image</button>
+                            <button id="clearButton" class="btn btn-outline">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="history-section">
+                    <h3 class="history-title">Diagnosis History</h3>
+                    <div class="gallery" id="gallery">
+                        <!-- Gallery items will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">X-Ray Reader</div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Contact Us</a>
+                </div>
+            </div>
+            <div class="copyright">© 2025 X-Ray Reader. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

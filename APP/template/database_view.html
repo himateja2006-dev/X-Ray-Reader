@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-Ray Database Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto p-4">
+        <h1 class="text-4xl font-bold text-gray-800 mb-8">X-Ray Reader Database</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-blue-600 text-white p-6 rounded-lg shadow-lg flex flex-col justify-between">
+                <p class="text-xl font-semibold mb-2">Total Users</p>
+                <p class="text-5xl font-extrabold">{{ total_users }}</p>
+            </div>
+            <div class="bg-blue-600 text-white p-6 rounded-lg shadow-lg flex flex-col justify-between">
+                <p class="text-xl font-semibold mb-2">Total X-Ray Analyses</p>
+                <p class="text-5xl font-extrabold">{{ total_analyses }}</p>
+            </div>
+            <div class="bg-blue-600 text-white p-6 rounded-lg shadow-lg flex flex-col justify-between">
+                <p class="text-xl font-semibold mb-2">Average Confidence</p>
+                <p class="text-5xl font-extrabold">{{ "%.1f" | format(average_confidence) if average_confidence is not none else "N/A" }}%</p>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">X-Ray Analysis Results</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Predicted Disease</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Confidence</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for image in images %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ image._id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <img src="/uploads/{{ image.filename }}" alt="X-ray" class="h-20 w-20 object-cover rounded">
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ image.prediction }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm 
+                                {% if image.confidence >= 80 %}text-green-600
+                                {% elif image.confidence >= 60 %}text-yellow-600
+                                {% else %}text-red-600
+                                {% endif %}">
+                                {{ "%.2f" | format(image.confidence) }}%
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ image.upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if not images %}
+            <div class="p-6 text-center text-gray-500">No X-Ray analyses found for this user.</div>
+            {% endif %}
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden mt-8">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">User Accounts</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for user in users %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user._id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if not users %}
+            <div class="p-6 text-center text-gray-500">No user accounts found.</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html> 
